@@ -1,53 +1,48 @@
-import {
-  HiOutlineBriefcase,
-  HiOutlineCalendarDays,
-  HiOutlineBanknotes,
-  HiOutlineChartBar,
-} from 'react-icons/hi2';
-import { formatCurrency } from 'utils/helpers';
-import Stat from './Stat';
+import Stat from "./Stat";
+import { HiOutlineBriefcase, HiOutlineChartBar } from "react-icons/hi";
+import { HiOutlineBanknotes, HiOutlineCalendarDays } from "react-icons/hi2";
+import { formatCurrency } from "../../utils/helpers";
 
 function Stats({ bookings, confirmedStays, numDays, cabinCount }) {
-  // Stat 1)
+  // 1. Number of bookings
   const numBookings = bookings.length;
 
-  // Stat 2)
-  const sales = bookings.reduce((acc, cur) => acc + cur.totalPrice, 0);
+  // 2. Sales
+  const sales = bookings.reduce((acc, booking) => acc + booking.totalPrice, 0);
 
-  // Stat 3)
+  // 3 check-ins
   const checkins = confirmedStays.length;
 
-  // Stat 4)
-  // We will use a trick to calculate occupancy rate. It's not 100% accurate, but we want to keep it simple. We know we can have a total of 'numDays * cabinCount' days to occupy, and we also know how many days were actually booked. From this, we can compute the percentage
-  const occupation =
-    confirmedStays.reduce((acc, cur) => acc + cur.numNights, 0) /
+  // 4 Occupancy rate
+  const occupancyRate =
+    confirmedStays.reduce((acc, stay) => acc + stay.numNights, 0) /
     (numDays * cabinCount);
 
   return (
     <>
       <Stat
+        title="Bookings"
+        color="blue"
         icon={<HiOutlineBriefcase />}
-        title='Bookings'
         value={numBookings}
-        color='blue'
       />
       <Stat
+        title="Sales"
+        color="green"
         icon={<HiOutlineBanknotes />}
-        title='Sales'
         value={formatCurrency(sales)}
-        color='green'
       />
       <Stat
+        title="Check ins"
+        color="indigo"
         icon={<HiOutlineCalendarDays />}
-        title='Check ins'
         value={checkins}
-        color='indigo'
       />
       <Stat
+        title="Occupancy rate"
+        color="yellow"
         icon={<HiOutlineChartBar />}
-        title='Occupancy rate'
-        value={Math.round(occupation * 100) + '%'}
-        color='yellow'
+        value={Math.round(occupancyRate * 100) + "%"}
       />
     </>
   );
